@@ -53,14 +53,17 @@ def place_order(symbol, qty):
 
 # Strategy Execution
 def main():
+    start_date = "2025-01-01 09:15"
+    end_date = "2025-01-27 15:30"
+    time_interval = "15min"
     # Fetch historical data for EMA calculation
-    data = get_historical_data(TRADING_SYMBOL, "15min", ["2025-01-01 09:15", "2025-01-25 15:30"])
+    data = get_historical_data(TRADING_SYMBOL, time_interval, [start_date, end_date])
     # data = calculate_ema(data)
 
     # # Monitor live data
     # while True:
     #     # Fetch latest data (pseudo-code, replace with live WebSocket fetch)
-    #     latest_data = get_historical_data(TRADING_SYMBOL, "15min", ["2025-01-25 15:30", "2025-01-25 15:45"])
+    #     latest_data = get_historical_data(TRADING_SYMBOL, time_interval, [start_date, end_date])
     #     latest_data = calculate_ema(latest_data)
 
     #     # Check if the closing price is above EMA
