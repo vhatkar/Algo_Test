@@ -1,5 +1,5 @@
 # modules
-from smartapi import SmartConnect
+from SmartApi import SmartConnect
 import pandas as pd
 import time
 
@@ -58,6 +58,7 @@ def main():
     time_interval = "15min"
     # Fetch historical data for EMA calculation
     data = get_historical_data(TRADING_SYMBOL, time_interval, [start_date, end_date])
+    print(data)
     # data = calculate_ema(data)
 
     # # Monitor live data
@@ -75,10 +76,17 @@ def main():
 
     #     time.sleep(60)  # Check every minute
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     obj = SmartConnect(api_key=dd.API_KEY)
     data = obj.generateSession(dd.USER_ID, dd.PASSWORD)
     token = data['data']['refreshToken']
     obj.setAccessToken(token)
 
     main()
+
+#TODO continue from here
+
+# Traceback (most recent call last):
+#   File "/home/sinhurry/mywerks/Algo_Test/ema_indicator_query.py", line 81, in <module>
+#     data = obj.generateSession(dd.USER_ID, dd.PASSWORD)
+# TypeError: SmartConnect.generateSession() missing 1 required positional argument: 'totp'
