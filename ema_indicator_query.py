@@ -2,11 +2,10 @@
 from SmartApi import SmartConnect
 import pandas as pd
 import time
-
+import pyotp
 
 # credentials
 import document_detail as dd
-
 
 # Constants
 TRADING_SYMBOL = "SBIN-EQ"  # Replace with the desired future symbol
@@ -71,14 +70,17 @@ def main():
     #     last_row = latest_data.iloc[-1]
     #     if last_row['close'] > last_row['EMA_21']:
     #         print("Condition met. Placing order.")
-    #         place_order(TRADING_SYMBOL, qty=1)
     #         break
 
     #     time.sleep(60)  # Check every minute
 
 if __name__ == "__main__":
+    qrOtp = dd.SECRET_KEY
     obj = SmartConnect(api_key=dd.API_KEY)
-    data = obj.generateSession(dd.USER_ID, dd.PASSWORD)
+    print('USER ID ', dd.USER_ID, 'PASSEORD ', dd.PASSWORD)
+    totp = pyotp.TOTP(qrOtp)
+    # totp = totp.now()
+    data = obj.generateSession(dd.USER_ID, dd.PASSWORD, totp)
     token = data['data']['refreshToken']
     obj.setAccessToken(token)
 
