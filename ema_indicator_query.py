@@ -1,5 +1,6 @@
 # modules
-from SmartApi import SmartConnect
+# from SmartApi import SmartConnect
+from SmartApi.smartConnect import SmartConnect
 import pandas as pd
 import time
 import pyotp
@@ -22,8 +23,11 @@ def get_historical_data(symbol, interval, duration):
         "fromdate": duration[0],  # Start date
         "todate": duration[1]    # End date
     }
+    print('+++ before getcandledata ')
     response = obj.getCandleData(params)
-    obj.terminateSession(dd.USER_ID)
+    print('+++ after getcandle data ', response)
+    print('+++ response data ', response['data'])
+    obj.terminateSession(dd.CLIENT_ID)
     return pd.DataFrame(response['data'], columns=["datetime", "open", "high", "low", "close", "volume"])
 
 
@@ -36,7 +40,7 @@ def calculate_ema(data, period=21):
 def place_order(symbol, qty):
     """Place a buy order for the future."""
     obj = SmartConnect(api_key=dd.API_KEY)
-    obj.generateSession(dd.USER_ID, dd.PASSWORD)
+    obj.generateSession(dd.CLIENT_ID, dd.PASSWORD, totp=dd.TOTP)
     order_params = {
         "variety": "NORMAL",
         "tradingsymbol": symbol,
@@ -75,20 +79,14 @@ def main():
     #     time.sleep(60)  # Check every minute
 
 if __name__ == "__main__":
-    qrOtp = dd.SECRET_KEY
+    qrOtp = dd.TOTP
     obj = SmartConnect(api_key=dd.API_KEY)
-    print('USER ID ', dd.USER_ID, 'PASSEORD ', dd.PASSWORD)
-    totp = pyotp.TOTP(qrOtp)
-    # totp = totp.now()
-    data = obj.generateSession(dd.USER_ID, dd.PASSWORD, totp)
+    print('USER ID ', dd.CLIENT_ID, 'PASSEORD ', dd.PASSWORD)
+    totp = pyotp.TOTP(dd.TOTP)
+    totp = totp.now()
+    data = obj.generateSession(dd.CLIENT_ID, dd.PASSWORD, totp)
     token = data['data']['refreshToken']
     obj.setAccessToken(token)
-
     main()
 
 #TODO continue from here
-
-# Traceback (most recent call last):
-#   File "/home/sinhurry/mywerks/Algo_Test/ema_indicator_query.py", line 81, in <module>
-#     data = obj.generateSession(dd.USER_ID, dd.PASSWORD)
-# TypeError: SmartConnect.generateSession() missing 1 required positional argument: 'totp'
