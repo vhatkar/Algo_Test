@@ -2,6 +2,7 @@
 from SmartApi.smartConnect import SmartConnect
 import pyotp
 import json
+import pandas as pd
 
 # credentials
 import document_detail as dd
@@ -35,10 +36,17 @@ historicDataParams = {
 
 # ✅ Fetch historical candle data
 try:
+    period = 21
     response = smart_api.getCandleData(historicDataParams)
     candle_data = response["data"]
 
     # Print formatted JSON response
     print(json.dumps(candle_data, indent=4))
+    df = pd.DataFrame(candle_data, columns=["datetime", "open", "high", "low", "close", "volume"])
+    df['EMA_21'] = df['close'].ewm(span=period, adjust=False).mean()
+    print("ONE DAY \n", df.to_markdown())
+    last_row = df.iloc[-1]
+    if last_row['close'] > last_row['EMA_21']:
+        print("Condition met. Placing order because last close is greater than last ema_21 ")
 except Exception as e:
     print(f"Error fetching candle data: {str(e)}")
