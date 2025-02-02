@@ -3,7 +3,7 @@ from SmartApi.smartConnect import SmartConnect
 import pandas as pd
 import pyotp
 import json
-
+import session as ss
 # credentials
 import document_detail as dd
 
@@ -15,10 +15,8 @@ class EMA:
     SYMBOL_TOKEN = "3045"
 
     def __init__(self):
-        _totp = pyotp.TOTP(dd.TOTP)
-        _totp = _totp.now()
-        self.smart_api = SmartConnect(api_key=dd.API_KEY)
-        self.session = self.smart_api.generateSession(dd.CLIENT_ID, dd.PASSWORD, totp=_totp)
+        self.smart_api = None
+        self.session = ss.Session
 
     def get_historical_data(self, symbol, interval, duration):
         """Fetch historical data to calculate EMA."""
@@ -51,8 +49,6 @@ def main():
     # token = session['data']['refreshToken']
     # print('+++ token ', token)
     # ema.smart_api.setAccessToken(token)
-
-    # historical params
     # Fetch historical data for EMA calculation
     try:
         _historical_data = ema.get_historical_data(ema.SYMBOL_TOKEN, time_interval, [start_date, end_date])
