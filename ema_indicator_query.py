@@ -3,20 +3,19 @@ from SmartApi.smartConnect import SmartConnect
 import pandas as pd
 import pyotp
 import json
-import session as ss
+import session
 # credentials
 import document_detail as dd
 
 
-class EMA:
+class EMA(session.Session):
     # Constants
     TRADING_SYMBOL = "SBIN-EQ"  # Replace with the desired future symbol
     EXCHANGE = "NSE"
     SYMBOL_TOKEN = "3045"
 
     def __init__(self):
-        self.smart_api = None
-        self.session = ss.Session
+        super().__init__()
 
     def get_historical_data(self, symbol, interval, duration):
         """Fetch historical data to calculate EMA."""
@@ -50,14 +49,20 @@ def main():
     # print('+++ token ', token)
     # ema.smart_api.setAccessToken(token)
     # Fetch historical data for EMA calculation
+
     try:
         _historical_data = ema.get_historical_data(ema.SYMBOL_TOKEN, time_interval, [start_date, end_date])
         _ema_data = ema.calculate_ema(_historical_data)
         print('+++ _ema data ', _ema_data)
         print("ONE DAY \n", _ema_data.to_markdown())
-        last_row = _ema_data.iloc[-1]
-        if last_row['close'] > last_row['EMA_21']:
-            print("Condition met. Placing order because last close is greater than last ema_21 ")
+        # df_sorted = df.sort_values(by='Age', ascending=True)
+        _ema_sorted = _ema_data.sort_values(by='EMA_21', ascending=True)
+        print('+++ ema sorted \n\n', _ema_sorted)
+        greater_than = _ema_sorted[_ema_sorted['close'] > _ema_sorted['EMA_21']]
+        print('+++ greater than \n\n', greater_than)
+        # last_row = _ema_data.iloc[-1]
+        # if last_row['close'] > last_row['EMA_21']:
+        #     print("Condition met. Placing order because last close is greater than last ema_21 ")
     except Exception as e:
         print(f"Error fetching candle data: {str(e)}")
 
