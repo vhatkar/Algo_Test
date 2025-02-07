@@ -5,7 +5,7 @@ import pyotp
 import json
 import session
 # credentials
-import document_detail as dd
+import config as dd
 
 
 class EMA(session.Session):

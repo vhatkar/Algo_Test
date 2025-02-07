@@ -5,7 +5,7 @@ import json
 import pandas as pd
 
 # credentials
-import document_detail as dd
+import config as dd
 
 # Constants
 TRADING_SYMBOL = "SBIN-EQ"  # Replace with the desired future symbol

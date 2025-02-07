@@ -1,7 +1,7 @@
 import websocket
 import json
 import threading
-import document_detail as dd
+import config as dd
 
 # Observer Interface
 class WebSocketObserver:
