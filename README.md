@@ -16,3 +16,22 @@ So we take bullish trade on the open of the new candle
 > * All history is uploaded to database on cloud
 > * * So Find a cloud which allows to host database for free
 > * * What does work, docker and database as a microservice
+
+
+##### Observer Pattern for live data
+
+>   WebSocketObserver defines an interface for all observers.
+    LoggerObserver logs every received message.
+    AlertObserver triggers an alert if a certain price threshold is exceeded.
+
+
+>   Manages WebSocket connection.
+    Maintains a list of observers.
+    Notifies observers whenever a message is received.
+
+>   Runs ws.run_forever() inside a separate thread, allowing the main program to remain responsive.
+
+##### Run the script
+
+###### This implementation makes it easy to add new observers (e.g., a database logger) without modifying the core WebSocket handling logic.
+> python websocket_observer.py

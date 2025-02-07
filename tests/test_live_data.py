@@ -1,11 +1,10 @@
 import json
 import websocket
-from ema_indicator_query import EMA
+import session
 
 # Replace with your SmartAPI access token from the session
 # token = session['data']['refreshToken']
-ema = EMA()
-ema.session()
+
 access_token = "your_access_token"
 
 def on_message(ws, message):
