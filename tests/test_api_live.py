@@ -1,6 +1,7 @@
 import websocket
 import json
 import threading
+import document_detail as dd
 
 # Observer Interface
 class WebSocketObserver:
@@ -16,11 +17,17 @@ class LoggerObserver(WebSocketObserver):
 class AlertObserver(WebSocketObserver):
     def update(self, message):
         data = json.loads(message)
-        if "price" in data and data["price"] > 1000:  # Example condition
-            print("[Alert] Price exceeded 1000:", data["price"])
+        print('+++ data ', data)
+        # if "price" in data and data["price"] > 1000:  # Example condition
+        #     print("[Alert] Price exceeded 1000:", data["price"])
 
 # WebSocket Client (Subject)
 class WebSocketClient:
+    YOUR_ACCESS_TOKEN = dd.TOTP
+    SYMBOL_TOKEN = "3045"
+    TRADING_SYMBOL = "SBIN-EQ"
+    EXCHANGE = "NSE"
+
     def __init__(self, url):
         self.url = url
         self.observers = []
@@ -47,10 +54,10 @@ class WebSocketClient:
         print("[WebSocket] Connection opened")
         subscribe_payload = {
             "action": "subscribe",
-            "token": "YOUR_ACCESS_TOKEN",
+            "token": self.YOUR_ACCESS_TOKEN,
             "feedtype": "ltp",
-            "segment": "NSE",
-            "symbol": "NIFTY"
+            "segment": self.EXCHANGE,
+            "symbol": self.TRADING_SYMBOL
         }
         ws.send(json.dumps(subscribe_payload))
         print("[WebSocket] Subscription sent")
