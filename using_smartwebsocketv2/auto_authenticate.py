@@ -5,13 +5,16 @@ import pyotp, time, pytz
 from datetime import datetime
 import threading
 from config import *
+from session import Session
+
+_session = Session()
 
 #create object of call
 obj=SmartConnect(api_key=apikey)
 
 #login api call
 
-data = obj.generateSession(username,pwd,pyotp.TOTP(token).now())
+data = obj.generateSession(username, pwd, pyotp.TOTP(token).now())
 #cls
 # print (data)
 refreshToken= data['data']['refreshToken']
@@ -24,3 +27,4 @@ FEED_TOKEN =obj.getfeedToken()
 #fetch User Profile
 res= obj.getProfile(refreshToken)
 print(res['data']['exchanges'])
+

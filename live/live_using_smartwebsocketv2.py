@@ -1,32 +1,6 @@
-# package import statement
-from SmartApi import SmartConnect  # or from smartapi.smartConnect import SmartConnect
-
-import pyotp, time, pytz
-from datetime import datetime
-import threading
-from config import *
-
-# create object of call
-obj = SmartConnect(api_key=apikey)
-
-# login api call
-
-data = obj.generateSession(username, pwd, pyotp.TOTP(token).now())
-# cls
-# print (data)
-refreshToken = data['data']['refreshToken']
-AUTH_TOKEN = data['data']['jwtToken']
-
-# fetch the feedtoken
-FEED_TOKEN = obj.getfeedToken()
-# print ("Feed Token: "+FEED_TOKEN)
-
-# fetch User Profile
-res = obj.getProfile(refreshToken)
-print(res['data']['exchanges'])
-
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 from logzero import logger
+import threading
 
 correlation_id = "ws_test"
 action = 1  # action = 1, subscribe to the feeds action = 2 - unsubscribe
