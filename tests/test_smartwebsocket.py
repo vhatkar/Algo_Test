@@ -5,8 +5,6 @@ import config as cnf  # Assuming you have a config file for API keys
 from session import Session
 
 
-
-
 class TestSmartWebSocketV2(unittest.TestCase):
     sess = Session()
     AUTH_TOKEN = sess.auth_token()
