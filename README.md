@@ -1,4 +1,9 @@
 # Algo_Test
+#####TODO
+>   Initialize WebSocket (SmartWebSocketV2)
+    Subscribe to live data
+    Process incoming data
+    Plot live prices using Matplotlib
 
 #### ✅ python -m unittest tests/test_session.py
 

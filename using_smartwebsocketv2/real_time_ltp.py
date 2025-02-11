@@ -1,84 +1,94 @@
-import auto_authenticate
+#################################################
+# How It Works
+# Connects to WebSocket using SmartWebSocketV2
+# Subscribes to stock tokens
+# Receives live market data via on_message()
+# Stores latest 50 price points in time_series and price_series
+# Plots real-time price movements with Matplotlib
+# Updates the chart dynamically every second
+#################################################
 
+import json
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
-from logzero import logger
+import config  # Assuming config.py has API credentials
 
-correlation_id = "ws_test"
-action = 1  # action = 1, subscribe to the feeds action = 2 - unsubscribe
-mode = 1  # mode = 1 , Fetches LTP quotes
+# Authentication Details
+AUTH_TOKEN = "your_auth_token"
+FEED_TOKEN = "your_feed_token"
+API_KEY = "your_api_key"
+CLIENT_ID = "your_client_id"
 
+# Subscription Tokens
 token_list = [
-    {
-        "exchangeType": 2,
-        "tokens": ["57920", "57919"]
-    }
-]
-token_list1 = [
-    {
-        "exchangeType": 1,
-        "tokens": ["26000", "26009"]
-    }
+    {"exchangeType": 2, "tokens": ["57920"]}  # Example: Token for a stock (NSE)
 ]
 
-sws = SmartWebSocketV2(AUTH_TOKEN, apikey, username, FEED_TOKEN, max_retry_attempt=5)
+# Initialize SmartWebSocketV2
+sws = SmartWebSocketV2(AUTH_TOKEN, API_KEY, CLIENT_ID, FEED_TOKEN)
 
+# Live data storage
+time_series = []
+price_series = []
 
-# row_format = "Exchange Type: {exchange_type}, Token: {token}, Last Traded Price: {last_traded_price}"
+# Matplotlib Setup
+fig, ax = plt.subplots()
+line, = ax.plot([], [], 'r-', label="Live Price")
 
+# Initialize plot
+def init():
+    ax.set_xlim(0, 50)  # Time window (last 50 ticks)
+    ax.set_ylim(1000, 2000)  # Adjust based on expected price range
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Price")
+    ax.legend()
+    return line,
 
-def on_data(wsapp, message):
-    # Convert timestamp from milliseconds to seconds
-    timestamp = message['exchange_timestamp'] / 1000  # Convert to seconds
-    utc_time = datetime.utcfromtimestamp(timestamp)
+# Callback function to process live data
+def on_message(message):
+    global time_series, price_series
+    data = json.loads(message)
 
-    # Define the timezone for UTC +05:30
-    timezone = pytz.timezone('Asia/Kolkata')  # 'Asia/Kolkata' is the timezone for UTC +05:30
+    if "data" in data:
+        for entry in data["data"]:
+            token = entry["token"]  # Extract token
+            last_price = entry["ltp"]  # Last traded price
 
-    # Convert UTC time to UTC +05:30
-    local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(timezone)
-    formatted_timestamp = local_time.strftime('%Y-%m-%d %H:%M:%S')
+            print(f"Token: {token}, Price: {last_price}")
 
-    # Define the format for the output with two decimal places for Last Traded Price
-    row_format = "Exchange Type: {exchange_type}, Token: {token}, Last Traded Price: {last_traded_price:.2f}, Timestamp: {timestamp}"
+            # Store live price data
+            time_series.append(len(time_series))
+            price_series.append(last_price)
 
-    # Format the message data
-    formatted_row = row_format.format(
-        exchange_type=message['exchange_type'],
-        token=message['token'],
-        last_traded_price=message['last_traded_price'] / 100,
-        # Assuming this division by 100 is required for your specific case
-        timestamp=formatted_timestamp
-    )
+            # Keep only last 50 data points
+            if len(time_series) > 50:
+                time_series = time_series[-50:]
+                price_series = price_series[-50:]
 
-    # Print the formatted data
-    logger.info(formatted_row)
+# Matplotlib animation function
+def update(frame):
+    line.set_data(time_series, price_series)
+    ax.set_xlim(max(0, len(time_series) - 50), len(time_series))  # Dynamic x-axis
+    ax.set_ylim(min(price_series, default=1000) - 10, max(price_series, default=2000) + 10)
+    return line,
 
+# Attach callback to WebSocket
+sws.on_message = on_message
 
-def on_open(wsapp):
-    logger.info("on open")
-    sws.subscribe(correlation_id, mode, token_list)
-    sws.subscribe(correlation_id, mode, token_list1)
+# Start WebSocket and subscribe
+def start_websocket():
+    sws.connect()
+    sws.subscribe(token_list)
 
-    # sws.unsubscribe(correlation_id, mode, token_list1)
+# Run WebSocket in background
+import threading
+thread = threading.Thread(target=start_websocket, daemon=True)
+thread.start()
 
+# Start live chart animation
+ani = animation.FuncAnimation(fig, update, init_func=init, interval=1000, blit=False)
+plt.show()
 
-def on_error(wsapp, error):
-    logger.info(error)
-
-
-def on_close(wsapp):
-    logger.info("Close")
-
-
-def close_connection():
-    sws.close_connection()
-
-
-# Assign the callbacks.
-sws.on_open = on_open
-sws.on_data = on_data
-sws.on_error = on_error
-sws.on_close = on_close
-
-threading.Thread(target=sws.connect).start()
-
+# Close WebSocket when done
+sws.close_connection()
