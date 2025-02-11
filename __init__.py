@@ -1,2 +1,2 @@
-import document_detail
+import config
 import session

@@ -1,6 +1,10 @@
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 from logzero import logger
+import datetime
 import threading
+import config
+import pytz
+from session import Session
 
 correlation_id = "ws_test"
 action = 1  # action = 1, subscribe to the feeds action = 2 - unsubscribe
@@ -8,18 +12,22 @@ mode = 1  # mode = 1 , Fetches LTP quotes
 
 token_list = [
     {
-        "exchangeType": 2,
-        "tokens": ["57920", "57919"]
+        "exchangeType": 2,              # exchange type ( e.g., NSE )
+        "tokens": ["57920", "57919"]    # Instruments tokens for stocks
     }
 ]
 token_list1 = [
     {
-        "exchangeType": 1,
-        "tokens": ["26000", "26009"]
+        "exchangeType": 1,              # exchange type ( e.g., NSE )
+        "tokens": ["26000", "26009"]    # Instruments tokens for stocks
     }
 ]
 
-sws = SmartWebSocketV2(AUTH_TOKEN, apikey, username, FEED_TOKEN, max_retry_attempt=5)
+
+sess = Session()
+AUTH_TOKEN = sess.auth_token()
+FEED_TOKEN = sess.feed_token()
+sws = SmartWebSocketV2(AUTH_TOKEN, config.API_KEY, config.CLIENT_ID, FEED_TOKEN, max_retry_attempt=5)
 
 
 # row_format = "Exchange Type: {exchange_type}, Token: {token}, Last Traded Price: {last_traded_price}"
@@ -80,4 +88,3 @@ sws.on_error = on_error
 sws.on_close = on_close
 
 threading.Thread(target=sws.connect).start()
-

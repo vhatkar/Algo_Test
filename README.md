@@ -1,6 +1,8 @@
 # Algo_Test
 
-#### python3 -m tests.test_candle_data > results/test_candle_data_results.txt
+#### ✅ python -m unittest tests/test_session.py
+
+#### ~~python3 -m tests.test_candle_data > results/test_candle_data_results.txt~~
 
 
 ##### ***TODO*** 
