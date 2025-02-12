@@ -1,4 +1,9 @@
 # Algo_Test
+> Installation
+> 
+> pip install SmartApi websocket-client pandas matplotlib plotly
+
+
 #####TODO
 >   Initialize WebSocket (SmartWebSocketV2)
     Subscribe to live data

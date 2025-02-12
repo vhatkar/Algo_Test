@@ -46,6 +46,7 @@ def on_open(ws):
 
 
 # Create WebSocketApp
+# here call SmartWebSocketV2
 ws = websocket.WebSocketApp(
     WS_URL,
     on_message=on_message,
