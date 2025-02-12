@@ -4,8 +4,9 @@ import pandas as pd
 import pyotp
 import json
 import session
-# credentials
-import config as dd
+
+# config
+import config as cnf
 
 
 class EMA(session.Session):
@@ -30,7 +31,7 @@ class EMA(session.Session):
 
         response = self.smart_api.getCandleData(historicDataParams)
         _candle_data = response['data']
-        self.smart_api.terminateSession(dd.CLIENT_ID)
+        self.smart_api.terminateSession(cnf.CLIENT_ID)
         return pd.DataFrame(_candle_data, columns=["datetime", "open", "high", "low", "close", "volume"])
 
     def calculate_ema(self, data, period=21):

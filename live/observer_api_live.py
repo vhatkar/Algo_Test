@@ -34,10 +34,12 @@ class WebSocketObserver:
     def update(self, message):
         raise NotImplementedError("Observer must implement the update method.")
 
+
 # Concrete Observer: Logs messages
 class LoggerObserver(WebSocketObserver):
     def update(self, message):
         print("[Logger] Received:", message)
+
 
 # Concrete Observer: Alerts on a certain condition
 class AlertObserver(WebSocketObserver):
@@ -47,11 +49,12 @@ class AlertObserver(WebSocketObserver):
         # if "price" in data and data["price"] > 1000:  # Example condition
         #     print("[Alert] Price exceeded 1000:", data["price"])
 
+
 class SmartWebSocketV2Client:
     ACTION = "subscribe"
     FEED_TYPE = "ltp"
     YOUR_ACCESS_TOKEN = cnf.TOTP
-    SYMBOL_TOKEN = "3045"
+    SYMBOL_TOKEN = "3045" # used to get historical data
     TRADING_SYMBOL = "SBIN-EQ"
     EXCHANGE = "NSE"
     # variables
@@ -143,18 +146,6 @@ class SmartWebSocketV2Client:
         print("[WebSocket] Message received")
         self.notify_observers(message)
 
-    # def on_open(self, ws):
-    #     print("[WebSocket] Connection opened")
-    #     subscribe_payload = {
-    #         "action": self.ACTION,
-    #         "token": self.YOUR_ACCESS_TOKEN,
-    #         "feedtype": self.FEED_TYPE,
-    #         "segment": self.EXCHANGE,
-    #         "symbol": self.TRADING_SYMBOL
-    #     }
-    #     ws.send(json.dumps(subscribe_payload))
-    #     print("[WebSocket] Subscription sent")
-
     def start(self):
 
         self.sws = SmartWebSocketV2(
@@ -174,6 +165,28 @@ class SmartWebSocketV2Client:
         # or
         thread = threading.Thread(target=self.sws.connect)
         thread.start()
+
+    def get_latest_close_greater_than_ema(self, _live_data, time_interval, start_date, end_date):
+        # _flag = None
+        # try:
+        _ema_data = self.calculate_ema(_live_data)
+        _ema_sorted = _ema_data.sort_values(by='EMA_21', ascending=True)
+        print('+++ ema sorted \n\n', _ema_sorted)
+        _greater_than = _ema_sorted[_ema_sorted['close'] > _ema_sorted['EMA_21']]
+        print('+++ all greater than \n\n', _greater_than)
+        last_row = _ema_sorted.iloc[-1]
+        if last_row['close'] > last_row['EMA_21']:
+            print("Condition met. Placing order because last close {} is greater than last ema_21 {}\n".format(
+                last_row['close'], last_row['EMA_21']))
+
+        _greater_last_row = _greater_than.iloc[-1]
+        if _greater_last_row['close'] > _greater_last_row['EMA_21']:
+            print("_greater_last_row : Condition met. Placing order because last close {} is greater than last ema_21 {}\n".format(
+                _greater_last_row['close'], _greater_last_row['EMA_21']))
+
+        # except Exception as e:
+        #     print(f"Error fetching candle data: {str(e)}")
+        # return _flag
 
     def live_chart(self):
         """Updates the chart in real-time."""
