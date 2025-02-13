@@ -1,4 +1,8 @@
+'''
+This setup uses unittest.mock.patch to replace the on_* methods with mock objects, allowing you to test their invocation without executing their actual implementations.
 # command: python -m unittest test_observer_api_live.py
+'''
+
 
 import unittest
 from unittest.mock import patch, MagicMock
