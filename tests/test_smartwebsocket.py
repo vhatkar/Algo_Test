@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, patch
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import config as cnf  # Assuming you have a config file for API keys
 from session import Session
+from logzero import logger, logfile
 
 
 class TestSmartWebSocketV2(unittest.TestCase):
@@ -62,9 +63,15 @@ class TestSmartWebSocketV2(unittest.TestCase):
     def test_websocket_disconnect(self, mock_close):
         """Test WebSocket disconnection"""
         mock_close.return_value = None  # Mock close_connection()
+        # SmartWebSocketV2.on_close = custom_on_close
 
         self.sws.close_connection()
         mock_close.assert_called_once()  # Verify close_connection() was called
+
+    # def custom_on_close(self, message):
+    #     print("Custom on_message handler")
+    #     # Original functionality can be called if needed
+    #     close logfile here if open
 
 if __name__ == '__main__':
     unittest.main()

@@ -19,7 +19,7 @@ class Session:
     def auth_token(self):
         if self.login_response.get("status"):
             _auth_token = self.login_response["data"]["jwtToken"]
-            print(f"Auth Token: {_auth_token}")
+            # print(f"Auth Token: {_auth_token}")
             return _auth_token
 
     def refresh_token(self):

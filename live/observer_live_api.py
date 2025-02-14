@@ -71,8 +71,7 @@ class SmartWebSocketV2Client:
     # Store live data
     data_queue = deque(maxlen=50)  # Store the last 50 data points
 
-    def __init__(self, url):
-        self.url = url
+    def __init__(self):
         self.observers = []
         self.sws = None
 
@@ -203,10 +202,10 @@ class SmartWebSocketV2Client:
 
             time.sleep(2)  # Update every 2 seconds
 
-
-#sws.connect()
-# or
-swsc = SmartWebSocketV2Client()
-swsc.start()
-# Run the live chart function
-swsc.live_chart()
+#
+# #sws.connect()
+# # or
+# swsc = SmartWebSocketV2Client()
+# swsc.start()
+# # Run the live chart function
+# swsc.live_chart()

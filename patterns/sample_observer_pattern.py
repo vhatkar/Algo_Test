@@ -1,3 +1,10 @@
+####################
+# Subject Class: Manages a list of observers and notifies them of state changes.
+# ConcreteSubject Class: Implements the Subject interface and maintains the state.
+# Observer Class: Defines the update method that concrete observers must implement.
+# ConcreteObserverA and ConcreteObserverB Classes: Implement the Observer interface and define specific reactions to state changes.
+####################
+
 from abc import ABC, abstractmethod
 
 class Subject(ABC):

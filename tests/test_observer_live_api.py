@@ -4,11 +4,24 @@
 # invocation without executing their actual implementations.
 # $ > cd main_project_dir
 # command: python -m unittest tests.test_observer_api_live
+
+# Inheritance is straightforward and leverages object-oriented principles
+# but may not be suitable if the class is not designed for extension or
+# if you need to change behavior dynamically.
+
+#
+# Monkey Patching allows for dynamic changes but can lead to maintenance
+# challenges and unexpected behavior, especially if multiple patches are
+# applied.
+#
+# The Decorator Pattern provides flexibility and adheres to the Single
+# Responsibility Principle, allowing behavior to be added dynamically
+# without modifying the original class.
 #####################################################
 
 import unittest
 from unittest.mock import patch, MagicMock
-from live.observer_api_live import SmartWebSocketV2Client
+from live.observer_live_api import SmartWebSocketV2Client
 
 class TestSmartWebSocketV2(unittest.TestCase):
     def setUp(self):
@@ -18,7 +31,7 @@ class TestSmartWebSocketV2(unittest.TestCase):
 
     def test_on_data(self):
         with patch.object(self.ws, 'on_data', return_value=None) as mock_on_data:
-            self.ws.on_data()
+            self.ws.on_data('test message on data')
             mock_on_data.assert_called_once_with('test message on data')
 
     def test_on_open(self):
