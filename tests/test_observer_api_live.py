@@ -1,8 +1,10 @@
-'''
-This setup uses unittest.mock.patch to replace the on_* methods with mock objects, allowing you to test their invocation without executing their actual implementations.
-# command: python -m unittest test_observer_api_live.py
-'''
+#####################################################
+# This setup uses unittest.mock.patch to replace the on_*
+# methods with mock objects, allowing you to test their
+# invocation without executing their actual implementations.
 
+# command: python -m unittest test_observer_api_live.py
+#####################################################
 
 import unittest
 from unittest.mock import patch, MagicMock
@@ -43,3 +45,5 @@ class TestSmartWebSocketV2(unittest.TestCase):
             self.ws.on_close()
             mock_on_close.assert_called_once()
 
+if __name__ == '__main__':
+    unittest.main()
