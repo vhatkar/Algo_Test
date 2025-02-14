@@ -2,8 +2,8 @@
 # This setup uses unittest.mock.patch to replace the on_*
 # methods with mock objects, allowing you to test their
 # invocation without executing their actual implementations.
-
-# command: python -m unittest test_observer_api_live.py
+# $ > cd main_project_dir
+# command: python -m unittest tests.test_observer_api_live.py
 #####################################################
 
 import unittest
