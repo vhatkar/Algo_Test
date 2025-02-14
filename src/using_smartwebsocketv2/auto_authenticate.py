@@ -1,11 +1,8 @@
 # package import statement
 from SmartApi import SmartConnect #or from smartapi.smartConnect import SmartConnect
 
-import pyotp, time, pytz
-from datetime import datetime
-import threading
-from config import *
-from session import Session
+import pyotp
+from src.session import Session
 
 _session = Session()
 

@@ -5,11 +5,10 @@
 
 
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
-import config as cnf  # Assuming you have a config file for API keys
-from session import Session
-from logzero import logger, logfile
+from src import config as cnf
+from src.session import Session
 
 
 class TestSmartWebSocketV2(unittest.TestCase):

@@ -20,8 +20,8 @@
 #####################################################
 
 import unittest
-from unittest.mock import patch, MagicMock
-from live.observer_live_api import SmartWebSocketV2Client
+from unittest.mock import patch
+from src.live.observer_live_api import SmartWebSocketV2Client
 
 class TestSmartWebSocketV2(unittest.TestCase):
     def setUp(self):

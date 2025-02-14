@@ -1,12 +1,8 @@
 # modules
-from SmartApi.smartConnect import SmartConnect
 import pandas as pd
-import pyotp
-import json
-import session
 
 # config
-import config as cnf
+from src import config as cnf, session
 
 
 class EMA(session.Session):

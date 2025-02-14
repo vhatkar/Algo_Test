@@ -12,7 +12,6 @@ import json
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
-import config  # Assuming config.py has API credentials
 
 # Authentication Details
 AUTH_TOKEN = "your_auth_token"

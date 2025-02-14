@@ -1,6 +1,6 @@
 import websocket
 import json
-import config as dd
+from src import config as dd
 import pyotp
 
 TRADING_SYMBOL = "SBIN-EQ"  # Replace with the desired future symbol
