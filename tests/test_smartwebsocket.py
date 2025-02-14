@@ -1,3 +1,9 @@
+#####################################################
+# $ > cd main_project_dir
+# command: python -m unittest tests.test_smartwebsocket
+#####################################################
+
+
 import unittest
 from unittest.mock import MagicMock, patch
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2

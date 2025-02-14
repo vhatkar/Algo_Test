@@ -3,7 +3,7 @@
 # methods with mock objects, allowing you to test their
 # invocation without executing their actual implementations.
 # $ > cd main_project_dir
-# command: python -m unittest tests.test_observer_api_live.py
+# command: python -m unittest tests.test_observer_api_live
 #####################################################
 
 import unittest
